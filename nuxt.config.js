@@ -33,9 +33,13 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-   modules: ['@nuxt/content'],
+   modules: ['@nuxt/content','@nuxtjs/axios'],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  axios: {
+    // extra config e.g
+    // BaseURL: 'https://link-to-API'
   }
 }

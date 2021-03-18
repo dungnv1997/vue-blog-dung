@@ -1,6 +1,4 @@
 <template>
-  <div class="headerright">
-	  <h2>List Blog</h2>
     <table>
       <thead>
 
@@ -49,7 +47,6 @@
                 </tr>
   </tbody>
     </table>
-  </div>
 </template>
 
 <!-- <script>
@@ -109,9 +106,10 @@ export default {
 
     deletedBlog(blogId){
 
-       axios.delete('http://localhost:4000/blogs' + blogId)
+       axios.delete('http://localhost:4000/blogs/' + blogId)
 
                 .then(response => {
+                  
 
                     this.dataBlog.splice((blogId-1), 1)
 

@@ -1,7 +1,13 @@
 <template>
-  <div class="headerright">
-	  <h2>List Blog</h2>
-    <table>
+<div>
+<AppHeader />
+<AppMenu/>
+  <div id="app" class="headerright">
+	  <h2>Search Blog</h2>
+      <div>Tiêu đề <input v-model="search" placeholder="tiêu đề"></div>
+       <button type="button" placeholder="Tiêu đề.." class="btn btn-success"  @click="searchBlog()">Search</button><br>
+      <Table v-if="showModal" />
+       <table v-if="showModal1">
       <thead>
 
     <tr>
@@ -28,7 +34,7 @@
   </thead>
   <tbody>
 
-     <tr  v-for="blogs in dataBlog" :key="blogs.id">
+     <tr  v-for="blogs in listBlog" :key="blogs.id">
 
                     <th scope="row">{{blogs.id}}</th>
 
@@ -50,66 +56,67 @@
   </tbody>
     </table>
   </div>
+  </div>
 </template>
 
-<!-- <script>
-export default {
-	async asyncData({ $content, params }) {
-		const articles = await $content('articles', params.slug)
-			.only(['id','title', 'category', 'public','position','data_pubblic','slug'])
-			.sortBy('createdAt', 'asc')
-			.fetch();
-		return {
-			articles
-		}
-	}
-}
-</script> -->
+
+
 <script>
+
+import AppHeader from '../components/AppHeader.vue'
+
+import AppMenu from '../components/AppMenu.vue'
+
+import Table from '../components/table-blog.vue'
 
 import axios from 'axios'
 
 export default {
+  name: 'admin',
 
-  components : {
+  components: {
+
+    AppHeader,
+
+    AppMenu, 
+
+    Table
 
   },
-
-  data(){
+  data() {
 
     return {
 
-      dataBlog : [],
+      listBlog: [],
+
+      search: '',
+      showModal: true,
+      showModal1: false,
 
     }
 
   },
+  methods: {
 
-  mounted() {
+    searchBlog() {
 
-    this.listData();
+      axios
 
-  },
+        .get('http://localhost:4000/blogs' + '?title_like=' + this.search)
 
-  computed: {
+        .then((res) => {
 
-    
+          this.listBlog = res.data
 
-  },
-
-  methods:{
-
-    listData(){
-
-      axios({method: 'GET',url: 'http://localhost:4000/blogs',data: null}).then(res =>{this.dataBlog = res.data; console.log(this.data)
-
-      }).catch(err => {console.log(err)})
-
-    }, 
-
+          console.log(res.data)
+            
+        })
+    this.showModal=false
+    this.showModal1=true
+    },
     deletedBlog(blogId){
 
-       axios.delete('http://localhost:4000/blogs' + blogId)
+       axios.delete('http://localhost:4000/blogs/' + blogId)
 
                 .then(response => {
 
@@ -120,23 +127,26 @@ export default {
                 console.log(this.dataBlog);
 
     }
-
-  }
+  },
 
 }
 
-
-
 </script>
 
+
+
 <style>
+
 table, td, th {  
   border: 1px solid #ddd;
   text-align: left;
 }
-.headerright h2{
- font-weight: 600;
-}
+h2{
+padding-bottom: 20px;}
+input{
+float: right;
+border: 1px solid ;
+width:80%;}
 table {
   border-collapse: collapse;
   width: 100%;
@@ -145,13 +155,13 @@ table {
 th, td {
   padding: 15px;
 }
-td a{
-color:blue;}
-td button{
- color: red !important;
- background: unset!important;
- border: 1px solid red;
-}
+.headerright button{
+    margin-top:20px;
+    margin-bottom: 20px;
+    background: green;
+    padding: 5px;
+    color: #fff;
+    border-radius: 5px;}
 .headerleft{
   float: left;
     width: 30%;
