@@ -1,94 +1,45 @@
 <template>
-  <div>
-    <div id="app" class="headerright">
-      <BlogSearch @button-clicked="searchBlog"></BlogSearch>
-      <Table v-if="ListNotSearch" />
-      <table v-if="ListSearch">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Tin</th>
-            <th>Loại</th>
-            <th>Trạng thái</th>
-            <th>Vị trí</th>
-            <th>Ngày public</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="blogs in listBlog" :key="blogs.id">
-            <th scope="row">{{ blogs.id }}</th>
-            <td>{{ blogs.title }}</td>
-            <select name="type" id="type" v-model="form.category">
-              <option
-                v-for="(cat, index) in CATEGORY"
-                :key="index"
-                :value="index"
-              >
-                {{ cat }}
-              </option>
-            </select>
-            <td>{{ blogs.public }}</td>
-            <td>{{ blogs.position }}</td>
-            <td>{{ blogs.data_pubblic }}</td>
-            <td>
-              <nuxt-link :to="`/${blogs.id}`">Edit</nuxt-link>
-            </td>
-            <td>
-              <button
-                type="button"
-                class="btn btn -outline-danger"
-                @click="deleteBlog(index, blogs.id)"
-                onclick="return confirm('Bạn có muốn xóa ?')"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="headeru">
+    <search @getKeyWord="searchBlog" />
+    <ListBlogs :dataBlogs="dataBlogs" @getListBlogs="searchAfterDelete" />
   </div>
 </template>
 <script>
-   import Table from '../../components/Blog/TableBlog' 
-   import BlogSearch from '../../components/Blog/BlogSearch'
-   import axios from "axios";
+   import axios from 'axios'
+   import ListBlogs from '../../components/Blog/BlogList'
+   import Search from '../../components/Blog/BlogSearch'
    export default {
-     name: "admin",
-     components: {
-       Table,
-       BlogSearch
-     },
-     data() {
-       return {
-         listBlog: [],
-         search: "",
-         ListNotSearch: true,
-         ListSearch: false
-       };
-     },
-     methods: {
-       searchBlog(data) {
-         axios
-           .get("http://localhost:4000/blogs" + "?title_like=" + data)
-           .then(res => {
-             this.listBlog = res.data;
-             console.log(res.data);
-           });
-         this.ListNotSearch = false;
-         this.ListSearch = true;
-       },
-       deleteBlog(index, id) {
-
-      axios.delete('http://localhost:4000/blogs/' + id).then((res) => {
-        console.log('deleted successfully')
-        this.dataBlog.splice(index, 1)
-      })
-    }
-     }
-   };
+      components: {
+         Search,
+         ListBlogs,
+      },
+      data() {
+         return {
+            dataBlogs: [],
+            keySearch: '',
+         }
+      },
+      methods: {
+         /**
+          * search blog by key search
+          */
+         searchBlog(data) {
+            this.keySearch = data
+            axios
+               .get('http://localhost:4000/blogs' + '?title_like=' + data)
+               .then((res) => {
+                  this.dataBlogs = res.data
+                  console.log(res.data)
+               })
+         },
+         /**
+          * reload list blog after delete
+          */
+         searchAfterDelete() {
+            this.searchBlog(this.keySearch)
+         },
+      },
+   }
 </script>
 <style>
 table,
@@ -121,6 +72,14 @@ td {
   color: #fff;
   border-radius: 5px;
 }
+.headeru button {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: green;
+  padding: 5px;
+  color: #fff;
+  border-radius: 5px;
+}
 .headerleft {
   float: left;
   width: 30%;
@@ -133,7 +92,21 @@ td {
   padding-left: 2%;
   padding-top: 20px;
 }
+.headeru {
+  float: left;
+  width: 40%;
+  padding-left: 2%;
+  padding-top: 20px;
+}
+.headeru label{
+   position: relative;
+   top:26px;
+}
 .headerright h3 {
+  font-weight: 600;
+  font-size: 20px;
+}
+.headeru h3 {
   font-weight: 600;
   font-size: 20px;
 }
@@ -144,5 +117,8 @@ header {
 .item {
   border: 1px solid #000;
   text-align: center;
+}
+.headeru .headerright {
+  width: 100% !important;
 }
 </style>

@@ -57,14 +57,18 @@
             name="yes"
             :value="true"
             v-model="form.public"
-          /><label for="checkbox1">Yes</label><br />
+          />
+          <label for="checkbox1">Yes</label>
+          <br />
           <input
             type="radio"
             id="checkbox2"
             name="no"
             :value="false"
             v-model="form.public"
-          /><label for="checkbox2">No</label><br />
+          />
+          <label for="checkbox2">No</label>
+          <br />
           <p>Date Public</p>
           <input type="date" name="" id="" v-model="form.data_pubblic" />
           <div class="active d-flex justify-content-center">
@@ -91,93 +95,93 @@
   </div>
 </template>
 <script>
-   import Table from './TableBlog.vue'
+   import Table from './BlogList.vue'
    import axios from 'axios'
-   import { DATA_CATE } from '@/content/content.js'
-   import { DATA_POS } from '@/content/content.js'
+   import {
+      DATA_CATE
+   } from '@/content/content.js'
+   import {
+      DATA_POS
+   } from '@/content/content.js'
    export default {
-     props: ['title'],
-     name: 'New',
-     data() {
-       return {
-         CATEGORY:DATA_CATE,
-         POSITION:DATA_POS,
-         errors:[],
-         form: {
-           id: '',
-           title: '',
-           des: '',
-           detail: '',
-           category: '',
-           public: '',
-           data_pubblic: '',
-           position: [],
-           thumbs: '',
+      props: ['title'],
+      name: 'New',
+      data() {
+         return {
+            CATEGORY: DATA_CATE,
+            POSITION: DATA_POS,
+            errors: [],
+            form: {
+               id: '',
+               title: '',
+               des: '',
+               detail: '',
+               category: '',
+               public: '',
+               data_pubblic: '',
+               position: [],
+               thumbs: '',
+            },
+         }
+      },
+      methods: {
+         createBlog() {
+            this.validate()
+            if (this.errors.length > 0) {
+               alert(this.errors)
+            } else {
+               axios.post('http://localhost:4000/blogs', this.form).then((res) => {
+                  alert('added successfully')
+               })
+               this.$router.push('/blog')
+            }
          },
-       }
-     },
-     methods: {
-      createBlog() {
-        this.validate()
-        if (this.errors.length > 0) {
-        alert(this.errors)
-      } else {
-        axios.post('http://localhost:4000/blogs', this.form).then((res) => {
-          alert('added successfully')
-        })
-        this.$router.push('/blog')
-      }
-    },
-       getBlogByID(id) {
-         axios 
-           .get('http://localhost:4000/blogs/' + id) 
-           .then((res) => (this.form = res.data)) 
-       },
-        updateBlog(id) {
-
-      this.validate()
-
-      if (this.errors.length > 0) {
-        alert(this.errors)
-      } else {
-        axios
-          .put('http://localhost:4000/blogs/' + id, this.form)
-          .then((res) => {
-            alert(' edited successfully')
-          })
-        this.$router.push('/blog/list')
-      }
-    },
-    /**
-   
-     * check validate
-   
-     */
-    validate() {
-      this.errors = []
-      if (this.form.title == '') {
-        this.errors.push('title cannot be empty!')
-      }
-      if (this.form.des == '') {
-        this.errors.push('description cannot be empty!')
-      }
-      if (this.form.detail == '') {
-        this.errors.push('detail cannot be empty!')
-      }
-      if (this.form.category == '') {
-        this.errors.push('category cannot be empty!')
-      }
-      if (this.form.position == []) {
-        this.errors.push('position cannot be empty!')
-      }
-    },
-     },  
-     mounted() {  
-         if (this.$route.params.id != null) { 
-         this.getBlogByID(this.$route.params.id)
-       } 
-     }, 
-   } 
+         getBlogByID(id) {
+            axios
+               .get('http://localhost:4000/blogs/' + id)
+               .then((res) => (this.form = res.data))
+         },
+         updateBlog(id) {
+            this.validate()
+            if (this.errors.length > 0) {
+               alert(this.errors)
+            } else {
+               axios
+                  .put('http://localhost:4000/blogs/' + id, this.form)
+                  .then((res) => {
+                     alert(' edited successfully')
+                  })
+               this.$router.push('/')
+            }
+         },
+         /**
+          * check validate
+          */
+         validate() {
+            this.errors = []
+            if (this.form.title == '') {
+               this.errors.push('title cannot be empty!')
+            }
+            if (this.form.des == '') {
+               this.errors.push('description cannot be empty!')
+            }
+            if (this.form.detail == '') {
+               this.errors.push('detail cannot be empty!')
+            }
+            if (this.form.category == '') {
+               this.errors.push('category cannot be empty!')
+            }
+            if (this.form.position == []) {
+               this.errors.push('position cannot be empty!')
+            }
+         },
+      },
+      mounted() {
+         if (this.$route.params.id != null) {
+            this.getBlogByID(this.$route.params.id)
+         }
+      },
+   }
 </script>
 <style>
 p {
