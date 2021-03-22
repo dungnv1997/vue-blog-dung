@@ -2,8 +2,9 @@
 <BlogList></BlogList>
 </template>
 <script>
-import BlogList from '../../components/AppPage/BlogList'
+import BlogList from '../../components/Blog/BlogList'
 export default {
+    
     components: {
         BlogList
     }

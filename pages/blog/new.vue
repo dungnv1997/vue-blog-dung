@@ -2,7 +2,7 @@
    <BlogCreate :title="title"></BlogCreate>
 </template>
 <script>
-   import BlogCreate from '../../components/AppPage/Create-edit'
+   import BlogCreate from '../../components/Blog/CreateEdit'
    export default {
        data() {
        return {
